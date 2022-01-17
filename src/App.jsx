@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useMoralis } from "react-moralis";
-import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect, Link } from "react-router-dom";
 import Account from "components/Account/Account";
 import Chains from "components/Chains";
 import TokenPrice from "components/TokenPrice";
@@ -64,7 +64,7 @@ const App = ({ isServerInfo }) => {
   return (
     <Layout style={{ height: "100vh", overflow: "auto" }}>
       <Router>
-        <Header style={styles.header}>
+        <Header style={styles.header}>          
           <Logo />
           <MenuItems />
           <div style={styles.headerRight}>
@@ -84,6 +84,9 @@ const App = ({ isServerInfo }) => {
           <Switch>
             <Route exact path="/">
               <Landing isServerInfo={isServerInfo} />
+            </Route>
+            <Route path="/nftBalance">
+              <NFTBalance />
             </Route>
             {/* <Route path="/wallet">
               <Wallet />
@@ -109,10 +112,7 @@ const App = ({ isServerInfo }) => {
             </Route>
             <Route path="/erc20transfers">
               <ERC20Transfers />
-            </Route>
-            <Route path="/nftBalance">
-              <NFTBalance />
-            </Route>
+            </Route>            
             <Route path="/contract">
               <Contract />
             </Route>
@@ -141,8 +141,10 @@ const App = ({ isServerInfo }) => {
 };
 
 export const Logo = () => (
-  <div style={{ display: "flex"}}>
-    <img src={TCTlogo} />
+  <div style={{ display: "flex" }}>
+    <Link to="/">
+      <img src={TCTlogo} />
+    </Link>
   </div>
 );
 

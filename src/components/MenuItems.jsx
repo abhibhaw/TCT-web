@@ -10,6 +10,7 @@ function MenuItems() {
       theme="light"
       mode="horizontal"
       style={{
+        background: "inherit",
         display: "flex",
         fontSize: "17px",
         fontWeight: "500",
@@ -18,6 +19,9 @@ function MenuItems() {
       }}
       defaultSelectedKeys={[pathname]}
     >
+      <Menu.Item key="/nftBalance">
+        <NavLink style={{color: "white"}}  to="/nftBalance">🖼 NFTs</NavLink>
+      </Menu.Item>
       {/* <Menu.Item key="/quickstart">
         <NavLink to="/quickstart">🚀 Quick Start</NavLink>
       </Menu.Item>
@@ -35,10 +39,7 @@ function MenuItems() {
       </Menu.Item>
       <Menu.Item key="/erc20transfers">
         <NavLink to="/erc20transfers">💸 Transfers</NavLink>
-      </Menu.Item>
-      <Menu.Item key="/nftBalance">
-        <NavLink to="/nftBalance">🖼 NFTs</NavLink>
-      </Menu.Item>
+      </Menu.Item>      
       <Menu.Item key="/contract">
         <NavLink to="/contract">📄 Contract</NavLink>
       </Menu.Item> */}

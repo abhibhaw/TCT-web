@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useMoralis, useNFTBalances } from "react-moralis";
-import { Card, Image, Tooltip, Modal, Input, Skeleton } from "antd";
+import { Card, Image, Tooltip, Modal, Input, Skeleton, Button } from "antd";
 import { FileSearchOutlined, SendOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { getExplorer } from "helpers/networks";
 import AddressInput from "./AddressInput";
@@ -64,7 +64,7 @@ function NFTBalance() {
     setAmount(e.target.value);
   };
 
-  console.log("NFTBalances", NFTBalances);
+  console.log("NFTBalances",chainId, NFTBalances);
   return (
     <div style={{ padding: "15px", maxWidth: "1030px", width: "100%" }}>
       <h1>🖼 NFT Balances</h1>
@@ -77,7 +77,7 @@ function NFTBalance() {
               return (
                 <Card
                   hoverable
-                  actions={[
+                  actions={[                    
                     <Tooltip title="View On Blockexplorer">
                       <FileSearchOutlined
                         onClick={() => window.open(`${getExplorer(chainId)}address/${nft.token_address}`, "_blank")}
@@ -103,6 +103,7 @@ function NFTBalance() {
                   key={index}
                 >
                   <Meta title={nft.name} description={nft.token_address} />
+                  <Button  type="primary" style={{width:"100%",marginTop:"10px"}}>Register NFT</Button>
                 </Card>
               );
             })}

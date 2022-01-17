@@ -29,7 +29,7 @@ export default function Landing({ isServerInfo }) {
 
   return (
     <div style={{ display: "flex", gap: "10px" }}>
-      
+      <iframe src="https://the-collective-truth.web.app/" height="600" width="1000"/>
     </div>
   );
 }
