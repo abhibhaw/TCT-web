@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useMoralis, useNFTBalances } from "react-moralis";
+import { useMoralis, useNFTBalances, useWeb3ExecuteFunction } from "react-moralis";
 import { Card, Image, Tooltip, Modal, Input, Skeleton, Button } from "antd";
 import { FileSearchOutlined, SendOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { getExplorer } from "helpers/networks";
@@ -23,48 +23,36 @@ const styles = {
 
 function NFTBalance() {
   const { data: NFTBalances } = useNFTBalances();
-  const { Moralis, chainId } = useMoralis();
-  const [visible, setVisibility] = useState(false);
-  const [receiverToSend, setReceiver] = useState(null);
-  const [amountToSend, setAmount] = useState(null);
-  const [nftToSend, setNftToSend] = useState(null);
-  const [isPending, setIsPending] = useState(false);
+  const { Moralis, chainId, account } = useMoralis();
   const { verifyMetadata } = useVerifyMetadata();
+  const contractProcessor = useWeb3ExecuteFunction();
 
-  async function transfer(nft, amount, receiver) {
-    const options = {
-      type: nft.contract_type,
-      tokenId: nft.token_id,
-      receiver: receiver,
-      contractAddress: nft.token_address,
-    };
-
-    if (options.type === "erc1155") {
-      options.amount = amount;
+  const requestNFTVerification = async (nft) => {
+    console.log("nft="+nft+"&owner="+account+"&chain="+chainId);
+    let options = {
+      contractAddress: "0x482d330fAb981cC830366FE94bDf7655fB6089f6",
+      functionName: "requestNFTVerification",
+      abi: [{"inputs":[{"internalType":"string","name":"_queryParams","type":"string"}],"name":"requestNFTVerification","outputs":[{"internalType":"bytes32","name":"requestId","type":"bytes32"}],"stateMutability":"nonpayable","type":"function"}],
+      params: {       
+        _queryParams: "nft="+nft+"&owner="+account+"&chain="+chainId,
+      },
+      msgValue: 0,
     }
-
-    setIsPending(true);
-    await Moralis.transfer(options)
-      .then((tx) => {
-        console.log(tx);
-        setIsPending(false);
-      })
-      .catch((e) => {
-        alert(e.message);
-        setIsPending(false);
-      });
+    await contractProcessor.fetch({
+      params: options,
+      onComplete: (res) => {
+        console.log("res", res);
+      },
+      onSuccess: (res) => {
+        console.log("res", res);
+      },
+      onError: (err) => {
+        console.log("err", err);
+      }
+    });
   }
-
-  const handleTransferClick = (nft) => {
-    setNftToSend(nft);
-    setVisibility(true);
-  };
-
-  const handleChange = (e) => {
-    setAmount(e.target.value);
-  };
-
-  console.log("NFTBalances",chainId, NFTBalances);
+  console.log(NFTBalances)
+  
   return (
     <div style={{ padding: "15px", maxWidth: "1030px", width: "100%" }}>
       <h1>🖼 NFT Balances</h1>
@@ -84,7 +72,7 @@ function NFTBalance() {
                       />
                     </Tooltip>,
                     <Tooltip title="Transfer NFT">
-                      <SendOutlined onClick={() => handleTransferClick(nft)} />
+                      <SendOutlined />
                     </Tooltip>,
                     <Tooltip title="Sell On OpenSea">
                       <ShoppingCartOutlined onClick={() => alert("OPENSEA INTEGRATION COMING!")} />
@@ -103,25 +91,12 @@ function NFTBalance() {
                   key={index}
                 >
                   <Meta title={nft.name} description={nft.token_address} />
-                  <Button  type="primary" style={{width:"100%",marginTop:"10px"}}>Register NFT</Button>
+                  <Button onClick={()=>requestNFTVerification(nft.token_address)} type="primary" style={{width:"100%",marginTop:"10px"}}>Register NFT</Button>
                 </Card>
               );
             })}
         </Skeleton>
-      </div>
-      <Modal
-        title={`Transfer ${nftToSend?.name || "NFT"}`}
-        visible={visible}
-        onCancel={() => setVisibility(false)}
-        onOk={() => transfer(nftToSend, amountToSend, receiverToSend)}
-        confirmLoading={isPending}
-        okText="Send"
-      >
-        <AddressInput autoFocus placeholder="Receiver" onChange={setReceiver} />
-        {nftToSend && nftToSend.contract_type === "erc1155" && (
-          <Input placeholder="amount to send" onChange={(e) => handleChange(e)} />
-        )}
-      </Modal>
+      </div>      
     </div>
   );
 }

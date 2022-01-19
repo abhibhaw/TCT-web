@@ -21,7 +21,10 @@ function MenuItems() {
     >
       <Menu.Item key="/nftBalance">
         <NavLink style={{color: "white"}}  to="/nftBalance">🖼 NFTs</NavLink>
-      </Menu.Item>
+      </Menu.Item>           
+      <Menu.Item key="/contract">
+        <NavLink style={{color: "white"}}  to="/contract">📄 Contract</NavLink>
+      </Menu.Item> 
       {/* <Menu.Item key="/quickstart">
         <NavLink to="/quickstart">🚀 Quick Start</NavLink>
       </Menu.Item>
@@ -39,9 +42,6 @@ function MenuItems() {
       </Menu.Item>
       <Menu.Item key="/erc20transfers">
         <NavLink to="/erc20transfers">💸 Transfers</NavLink>
-      </Menu.Item>      
-      <Menu.Item key="/contract">
-        <NavLink to="/contract">📄 Contract</NavLink>
       </Menu.Item> */}
     </Menu>
   );
