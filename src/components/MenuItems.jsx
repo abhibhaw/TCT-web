@@ -20,11 +20,14 @@ function MenuItems() {
       defaultSelectedKeys={[pathname]}
     >
       <Menu.Item key="/nftBalance">
-        <NavLink style={{color: "white"}}  to="/nftBalance">🖼 NFTs</NavLink>
+        <NavLink style={{color: "white"}}  to="/nftBalance">NFTs</NavLink>
       </Menu.Item>           
       <Menu.Item key="/contract">
-        <NavLink style={{color: "white"}}  to="/contract">📄 Contract</NavLink>
+        <NavLink style={{color: "white"}}  to="/contract">Contract</NavLink>
       </Menu.Item> 
+      <Menu.Item key="/profile">
+        <NavLink style={{color: "white"}}  to="/profile">Profile</NavLink>
+      </Menu.Item>
       {/* <Menu.Item key="/quickstart">
         <NavLink to="/quickstart">🚀 Quick Start</NavLink>
       </Menu.Item>

@@ -3,13 +3,9 @@ import { useMoralis } from "react-moralis";
 import { BrowserRouter as Router, Switch, Route, Redirect, Link } from "react-router-dom";
 import Account from "components/Account/Account";
 import Chains from "components/Chains";
-import TokenPrice from "components/TokenPrice";
+import Profile from "components/Profile";
 import Landing from "components/Landing";
-import ERC20Balance from "components/ERC20Balance";
-import ERC20Transfers from "components/ERC20Transfers";
-import DEX from "components/DEX";
 import NFTBalance from "components/NFTBalance";
-import Wallet from "components/Wallet";
 import { Layout, Tabs } from "antd";
 import "antd/dist/antd.css";
 import NativeBalance from "components/NativeBalance";
@@ -30,6 +26,7 @@ const styles = {
     color: "#041836",
     marginTop: "130px",
     padding: "10px",
+    width: "100%"
   },
   header: {
     position: "fixed",
@@ -90,7 +87,10 @@ const App = ({ isServerInfo }) => {
             </Route>
             <Route path="/contract">
               <Contract />
-            </Route>            
+            </Route> 
+            <Route path="/profile">
+              <Profile />
+            </Route>           
             {/* <Route path="/wallet">
               <Wallet />
             </Route>

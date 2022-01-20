@@ -45,21 +45,12 @@ const styles = {
 };
 
 function Account() {
-  const { authenticate, isAuthenticated, account, chainId, logout, user } = useMoralis();
+  const { authenticate, isAuthenticated, account, chainId, logout } = useMoralis();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isAuthModalVisible, setIsAuthModalVisible] = useState(false);  
-  const [username, setUsername] = useState("");
+  
 
-  useEffect(() => {
-    if (user?.get("username")) {
-      setUsername(user.get("username"));
-    }
-  }, [user]);
-
-  const updateUsername = async (username) => {
-    user.set("username", username);
-    await user.save();
-  };
+  
   
   if (!isAuthenticated || !account) {
     return (
@@ -150,12 +141,7 @@ function Account() {
             borderRadius: "1rem",
           }}
           bodyStyle={{ padding: "15px" }}
-        >
-          <div>
-            <label>Username</label>
-            <input type="text" value={username} onChange={(e)=>setUsername(e.target.value)} />
-            <button onClick={()=>updateUsername(username)}>Update</button>
-          </div>      
+        >                
           <Address avatar="left" size={6} copyable style={{ fontSize: "20px" }} />
           <div style={{ marginTop: "10px", padding: "0 10px" }}>
             <a href={`${getExplorer(chainId)}/address/${account}`} target="_blank" rel="noreferrer">
