@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useMoralis, useNFTBalances, useWeb3ExecuteFunction } from "react-moralis";
 import { Card, Image, Tooltip, Modal, Input, Skeleton, Button } from "antd";
 import { FileSearchOutlined, SendOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { getExplorer } from "helpers/networks";
-import AddressInput from "./AddressInput";
 import { useVerifyMetadata } from "hooks/useVerifyMetadata";
 
 const { Meta } = Card;
@@ -26,6 +25,8 @@ function NFTBalance() {
   const { Moralis, chainId, account } = useMoralis();
   const { verifyMetadata } = useVerifyMetadata();
   const contractProcessor = useWeb3ExecuteFunction();
+
+  const [nfts, setNFTs] = useState([]);
 
   const requestNFTVerification = async (nft) => {
     console.log("nft="+nft+"&owner="+account+"&chain="+chainId);
@@ -51,15 +52,59 @@ function NFTBalance() {
       }
     });
   }
-  console.log(NFTBalances)
+  
+  const fetchNFTstatus = async (nft) => {    
+      const options = {
+        contractAddress: process.env.REACT_APP_TCT_CONTRACT,
+        functionName: "getNFTRequestStatus",
+        abi: [{ "inputs": [{ "internalType": "string", "name": "_queryParams", "type": "string" }], "name": "getNFTRequestStatus", "outputs": [{ "internalType": "uint8", "name": "", "type": "uint8" }], "stateMutability": "view", "type": "function" }],
+        params: {
+          _queryParams: "nft=" + nft + "&owner=" + account + "&chain=" + chainId,
+        },
+        msgValue: 0,
+      }
+      let status = 0;
+      await contractProcessor.fetch({
+        params: options,
+        onComplete: (res) => {
+          console.log("res complete", res);
+        },
+        onSuccess: (res) => {
+          console.log("res", res);
+          status = res;
+        },
+        onError: (err) => {
+          console.log("err", err);
+        }
+      });
+
+      return status;
+  }
+
+  useEffect(() => { 
+    if (account && NFTBalances?.result) {
+      const hydratedNFTs = NFTBalances?.result.map(async (nft) => {
+        let status = await fetchNFTstatus(nft.token_address);
+        console.log("status", status);
+        return {
+          ...nft,
+          status: status,
+        }
+      });
+      Promise.all(hydratedNFTs).then((res) => {
+        console.log("hydratedNFTs", res);
+        setNFTs(res);
+      });
+    }
+  },[account, NFTBalances]);
   
   return (
     <div style={{ padding: "15px", maxWidth: "1030px", width: "100%" }}>
       <h1>🖼 NFT Balances</h1>
       <div style={styles.NFTs}>
         <Skeleton loading={!NFTBalances?.result}>
-          {NFTBalances?.result &&
-            NFTBalances.result.map((nft, index) => {
+          {nfts.length!==0 &&
+            nfts.map((nft, index) => {
               //Verify Metadata
               nft = verifyMetadata(nft);
               return (
@@ -91,7 +136,9 @@ function NFTBalance() {
                   key={index}
                 >
                   <Meta title={nft.name} description={nft.token_address} />
-                  <Button onClick={()=>requestNFTVerification(nft.token_address)} type="primary" style={{width:"100%",marginTop:"10px"}}>Register NFT</Button>
+                  {nft.status === "0" ?
+                    <Button onClick={() => requestNFTVerification(nft.token_address)} type="primary" style={{ width: "100%", marginTop: "10px" }}>Register NFT</Button>
+                    : <Button>Verified</Button>}
                 </Card>
               );
             })}
