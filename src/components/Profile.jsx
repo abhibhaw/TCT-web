@@ -1,6 +1,6 @@
 import { message, Table, Image, Modal, Button } from "antd";
 import { useEffect, useState } from "react";
-import { useMoralis } from "react-moralis";
+import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 import {uid} from "uid";
 
 export default function Profile(props) {
@@ -8,12 +8,18 @@ export default function Profile(props) {
     const [username, setUsername] = useState("");
     const [updateToggle, setUpdateToggle] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const tweetUID = uid(20);
+    const [loading, setLoading] = useState(false);
+    const [tweetUID, setTweetUID] = useState("");
+    const [tweetURL, setTweetURL] = useState("");
+
+    const contractProcessor = useWeb3ExecuteFunction();
+    
     const showModal = () => {
         setIsModalVisible(true);
     };
     
-      const handleOk = () => {
+    const handleOk = () => {
+        setLoading(false);
         setIsModalVisible(false);
       };
     
@@ -21,11 +27,53 @@ export default function Profile(props) {
         setIsModalVisible(false);
       };
 
-  useEffect(() => {
-    if (user?.get("username")) {
-      setUsername(user.get("username"));
+    useEffect(() => {
+        if (user?.get("username")) {
+        setUsername(user.get("username"));
+        }
+    }, [user]);
+
+    const verifyTweet = async () => {
+        const tweetID = tweetURL.split("/")[5];
+        console.log(tweetID, tweetUID);
+        let options = {
+            contractAddress: process.env.REACT_APP_TCT_CONTRACT,
+            functionName: "requestTwitterVerification",
+            abi: [{"inputs":[{"internalType":"string","name":"_tweet","type":"string"},{"internalType":"string","name":"_randid","type":"string"}],"name":"requestTwitterVerification","outputs":[{"internalType":"bytes32","name":"requestId","type":"bytes32"}],"stateMutability":"nonpayable","type":"function"}],
+            params: {       
+                _tweet: tweetID,
+                _randid: tweetUID
+            },
+            msgValue: 0,
+        }
+        setLoading(true);
+          await contractProcessor.fetch({
+            params: options,
+            onComplete: (res) => {
+                console.log("res", res);
+                handleOk();
+                message.success("Tweet Verification Requested");
+            },
+            onSuccess: (res) => {
+              console.log("res", res);
+            },
+            onError: (err) => {
+              console.log("err", err);
+            }
+          });
     }
-  }, [user]);
+
+    useEffect(() => {
+        // generate uid if not present in localstorage
+        if (!localStorage.getItem("uid")) {
+            const uidd = uid(20);
+            setTweetUID(uidd);
+            localStorage.setItem("uid",uidd);
+        } else {
+            setTweetUID(localStorage.getItem("uid"));
+        }
+    }, []);
+
     const updateUsername = async (username) => {       
         user.set("username", username);
         user.save().then(() => {
@@ -80,9 +128,10 @@ export default function Profile(props) {
                     <Modal
                         title="Verify Twitter"
                         visible={isModalVisible}
-                        onOk={handleOk}
+                        onOk={verifyTweet}
                         onCancel={handleCancel}    
                         okText="Verify"
+                        confirmLoading={loading}
                     >
                     <p>Make the following Tweet from your account</p>
                     <br></br>
@@ -90,7 +139,7 @@ export default function Profile(props) {
                         I'm verifying my account {tweetUID} on The Collective Truth.
                     </p>
                     <div style={{textAlign:"center",marginTop:"10px"}}>
-                        <input style={{width:"80%"}} placeholder="Tweet URL goes here" /> 
+                        <input onChange={(e)=>setTweetURL(e.target.value)} value={tweetURL} style={{width:"80%"}} placeholder="Tweet URL goes here" /> 
                     </div>
                     </Modal>
         </div>

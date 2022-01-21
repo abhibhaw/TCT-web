@@ -30,7 +30,7 @@ function NFTBalance() {
   const requestNFTVerification = async (nft) => {
     console.log("nft="+nft+"&owner="+account+"&chain="+chainId);
     let options = {
-      contractAddress: "0x482d330fAb981cC830366FE94bDf7655fB6089f6",
+      contractAddress: process.env.REACT_APP_TCT_CONTRACT,
       functionName: "requestNFTVerification",
       abi: [{"inputs":[{"internalType":"string","name":"_queryParams","type":"string"}],"name":"requestNFTVerification","outputs":[{"internalType":"bytes32","name":"requestId","type":"bytes32"}],"stateMutability":"nonpayable","type":"function"}],
       params: {       
