@@ -1,7 +1,9 @@
 import { message, Table, Image, Modal, Button } from "antd";
 import { useEffect, useState } from "react";
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
-import {uid} from "uid";
+import { uid } from "uid";
+import { CheckCircleTwoTone } from '@ant-design/icons';
+
 
 export default function Profile(props) {
     const { user, account } = useMoralis();
@@ -11,6 +13,7 @@ export default function Profile(props) {
     const [loading, setLoading] = useState(false);
     const [tweetUID, setTweetUID] = useState("");
     const [tweetURL, setTweetURL] = useState("");
+    const [twitterProfile, setTwitterProfile] = useState("");
 
     const contractProcessor = useWeb3ExecuteFunction();
     
@@ -32,6 +35,31 @@ export default function Profile(props) {
         setUsername(user.get("username"));
         }
     }, [user]);
+
+    const fetchTwitterAccount = async () => {
+        const options = {
+            contractAddress: process.env.REACT_APP_TCT_CONTRACT,
+            functionName: "getTwitterVerificationStatus",
+            abi: [{"inputs":[{"internalType":"address","name":"_account","type":"address"}],"name":"getTwitterVerificationStatus","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"}],
+            params: {       
+                _account: account,
+            },
+            msgValue: 0,
+        }
+        await contractProcessor.fetch({
+            params: options,
+            onComplete: (res) => {
+                console.log("res complete", res);
+            },
+            onSuccess: (res) => {
+                console.log("res", res);
+                setTwitterProfile(res);
+            },
+            onError: (err) => {
+                console.log("err", err);
+            }
+        });
+    }
 
     const verifyTweet = async () => {
         const tweetID = tweetURL.split("/")[5];
@@ -64,7 +92,19 @@ export default function Profile(props) {
     }
 
     useEffect(() => {
-        // generate uid if not present in localstorage
+        const checkExistingAccounts = async () => {
+            console.log(account);
+            await fetchTwitterAccount();
+        }
+        // if(!account)
+        //     checkExistingAccounts();        
+        if (account)
+            checkExistingAccounts();
+    }, [account]);
+
+    useEffect(() => {
+        
+        // generate uid if not present in localstorage        
         if (!localStorage.getItem("uid")) {
             const uidd = uid(20);
             setTweetUID(uidd);
@@ -120,8 +160,8 @@ export default function Profile(props) {
                 ]} dataSource={[
                     {
                         platform: <Image height="50px" width="50px" src="https://i0.wp.com/www.chalearning.ca/wp-content/uploads/2021/03/pnglot.com-twitter-bird-logo-png-139932.png?ssl=1" />,
-                        action: <Button onClick={showModal}>Twitter</Button>,
-                        status: "Not verified",
+                        action: twitterProfile === "" ? <Button onClick={showModal}>Twitter</Button> : <a href={"https://twitter.com/"+twitterProfile}>{twitterProfile}</a>,
+                        status: twitterProfile==="" ? "Not verified":<p>Verified <CheckCircleTwoTone twoToneColor="#52c41a" /> </p>,
                         weightage: '100%',
                     },
                     ]} pagination={false} />
