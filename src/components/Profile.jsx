@@ -1,12 +1,14 @@
 import { message, Table, Image, Modal, Button } from "antd";
 import { useEffect, useState } from "react";
 import { useMoralis } from "react-moralis";
+import {uid} from "uid";
 
 export default function Profile(props) {
     const { user, account } = useMoralis();
     const [username, setUsername] = useState("");
     const [updateToggle, setUpdateToggle] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const tweetUID = uid(20);
     const showModal = () => {
         setIsModalVisible(true);
     };
@@ -85,7 +87,7 @@ export default function Profile(props) {
                     <p>Make the following Tweet from your account</p>
                     <br></br>
                     <p style={{ border: "1px solid gold", padding: "10px", textAlign: "center" }}>
-                        I'm verifying my wallet {account} on The Collective Truth.
+                        I'm verifying my account {tweetUID} on The Collective Truth.
                     </p>
                     <div style={{textAlign:"center",marginTop:"10px"}}>
                         <input style={{width:"80%"}} placeholder="Tweet URL goes here" /> 
