@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useMoralis, useNFTBalances, useWeb3ExecuteFunction } from "react-moralis";
-import { Card, Image, Tooltip, Modal, Input, Skeleton, Button } from "antd";
+import { useMoralis,  useWeb3ExecuteFunction } from "react-moralis";
+import { Card, Image, Tooltip, Skeleton, Button } from "antd";
 import { FileSearchOutlined, SendOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { getExplorer } from "helpers/networks";
 import { useVerifyMetadata } from "hooks/useVerifyMetadata";
@@ -22,7 +22,7 @@ const styles = {
 };
 
 function NFTBalance() {   
-  const { Moralis, chainId, account } = useMoralis();
+  const { chainId, account } = useMoralis();
   const { getMetadata } = useVerifyMetadata();
   const contractProcessor = useWeb3ExecuteFunction();
 
@@ -68,10 +68,10 @@ function NFTBalance() {
       await contractProcessor.fetch({
         params: options,
         onComplete: (res) => {
-          console.log("res complete", res);
+          // console.log("res complete", res);
         },
         onSuccess: (res) => {
-          console.log("res", res);
+          // console.log("res", res);
           status = res;
         },
         onError: (err) => {

@@ -5,23 +5,21 @@ import { useChain, useMoralis } from "react-moralis";
 
 
 function Chains() {
-  const { switchNetwork, chainId, chain } = useChain();
+  const { switchNetwork, chainId } = useChain();
   const { isAuthenticated } = useMoralis();
-
-  console.log("chain", chain);
 
   useEffect(() => {
     if (!chainId) return null;
     if (chainId !== "0x2a") {
       message.warning("We only support Kovan Testnet. Please switch to Kovan Testnet.");
       switchNetwork("0x2a").then((res) => {
-        console.log(res);
         message.success("Thank You. Switched to Kovan Testnet.");
       }).catch((err) => {
         console.log(err);
         message.error("Failed to switch to Kovan Testnet. Please try again!");
       });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chainId]);
 
 

@@ -21,7 +21,7 @@ export const useVerifyMetadata = () => {
         //Get the Metadata
         await getMetadata(NFT);
         //Return Hooked NFT Object
-        console.log(results);
+        // console.log(results);
         return results?.[NFT.token_uri] ? results?.[NFT.token_uri] : NFT;
     }//verifyMetadata()
 
@@ -56,24 +56,10 @@ export const useVerifyMetadata = () => {
             //Set
             // setMetadata(NFT, metadata);
             //Log
-            console.log("getMetadata() Late-load for NFT Metadata " + NFT.token_uri, { metadata });
+            // console.log("getMetadata() Late-load for NFT Metadata " + NFT.token_uri, { metadata });
             return metadata;
         }//Valid Result        
     }//getMetadata()
-
-    /**
-     * Update NFT Object
-     * @param {object} NFT 
-     * @param {object} metadata 
-     */
-    function setMetadata(NFT, metadata) {
-        //Add Metadata
-        NFT.metadata = metadata;
-        //Set Image
-        if (metadata?.image) NFT.image = resolveLink(metadata.image);
-        //Set to State
-        if (metadata && !results[NFT.token_uri]) setResults({ ...results, [NFT.token_uri]: NFT });
-    }//setMetadata()
 
     return { verifyMetadata, getMetadata };
 

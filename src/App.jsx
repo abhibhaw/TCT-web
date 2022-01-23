@@ -1,14 +1,13 @@
 import { useEffect } from "react";
 import { useMoralis } from "react-moralis";
-import { BrowserRouter as Router, Switch, Route, Redirect, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route,  Link } from "react-router-dom";
 import Account from "components/Account/Account";
 import Chains from "components/Chains";
 import Profile from "components/Profile";
 import Landing from "components/Landing";
 import NFTBalance from "components/NFTBalance";
-import { Layout, Tabs } from "antd";
+import { Layout } from "antd";
 import "antd/dist/antd.css";
-import NativeBalance from "components/NativeBalance";
 import "./style.css";
 import Contract from "components/Contract/Contract";
 import Text from "antd/lib/typography/Text";
@@ -134,7 +133,7 @@ const App = ({ isServerInfo }) => {
 export const Logo = () => (
   <div style={{ display: "flex" }}>
     <Link to="/">
-      <img src={TCTlogo} />
+      <img src={TCTlogo} alt="TCT Logo " />
     </Link>
   </div>
 );
