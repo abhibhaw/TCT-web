@@ -23,7 +23,7 @@ const styles = {
     color: "#041836",
     marginTop: "130px",
     padding: "10px",
-    width: "100%"
+    width: "100%",
   },
   header: {
     position: "fixed",
@@ -47,18 +47,20 @@ const styles = {
   },
 };
 const App = ({ isServerInfo }) => {
-  const { isWeb3Enabled, enableWeb3, isAuthenticated, isWeb3EnableLoading } = useMoralis();
+  const { isWeb3Enabled, enableWeb3, isAuthenticated, isWeb3EnableLoading } =
+    useMoralis();
 
   useEffect(() => {
     const connectorId = window.localStorage.getItem("connectorId");
-    if (isAuthenticated && !isWeb3Enabled && !isWeb3EnableLoading) enableWeb3({ provider: connectorId });
+    if (isAuthenticated && !isWeb3Enabled && !isWeb3EnableLoading)
+      enableWeb3({ provider: connectorId });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, isWeb3Enabled]);
 
   return (
     <Layout style={{ height: "100vh", overflow: "auto" }}>
       <Router>
-        <Header style={styles.header}>          
+        <Header style={styles.header}>
           <Logo />
           <MenuItems />
           <div style={styles.headerRight}>
@@ -77,10 +79,10 @@ const App = ({ isServerInfo }) => {
             </Route>
             <Route path="/contract">
               <Contract />
-            </Route> 
+            </Route>
             <Route path="/profile">
               <Profile />
-            </Route>           
+            </Route>
             {/* <Route path="/wallet">
               <Wallet />
             </Route>
@@ -111,7 +113,7 @@ const App = ({ isServerInfo }) => {
             </Route> 
             <Route path="/ethereum-boilerplate">
               <Redirect to="/quickstart" />
-            </Route> */}            
+            </Route> */}
             <Route path="/nonauthenticated">
               <>Please login using the "Authenticate" button</>
             </Route>
@@ -120,8 +122,12 @@ const App = ({ isServerInfo }) => {
       </Router>
       <Footer style={{ textAlign: "center" }}>
         <Text style={{ display: "block" }}>
-          Thanks to Moralis for this awesome {' '}
-          <a href="https://github.com/ethereum-boilerplate/ethereum-boilerplate/" target="_blank" rel="noopener noreferrer">
+          Thanks to Moralis for this awesome{" "}
+          <a
+            href="https://github.com/ethereum-boilerplate/ethereum-boilerplate/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             boilerplate ⭐️
           </a>
         </Text>

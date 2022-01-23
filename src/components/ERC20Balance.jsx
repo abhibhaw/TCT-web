@@ -1,6 +1,7 @@
 import { useMoralis, useERC20Balances } from "react-moralis";
 import { Skeleton, Table } from "antd";
 import { getEllipsisTxt } from "../helpers/formatters";
+import { ImgEmpToken } from "assets";
 
 function ERC20Balance(props) {
   const { data: assets } = useERC20Balances(props);
@@ -13,7 +14,7 @@ function ERC20Balance(props) {
       key: "logo",
       render: (logo) => (
         <img
-          src={logo || "https://etherscan.io/images/main/empty-token.png"}
+          src={logo || ImgEmpToken}
           alt="nologo"
           width="28px"
           height="28px"

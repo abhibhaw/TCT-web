@@ -44,19 +44,15 @@ const styles = {
 };
 
 function Account() {
-  const { authenticate, isAuthenticated, account, chainId, logout } = useMoralis();
+  const { authenticate, isAuthenticated, account, chainId, logout } =
+    useMoralis();
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isAuthModalVisible, setIsAuthModalVisible] = useState(false);  
-  
+  const [isAuthModalVisible, setIsAuthModalVisible] = useState(false);
 
-  
-  
   if (!isAuthenticated || !account) {
     return (
       <>
-        <div
-          onClick={() => setIsAuthModalVisible(true)}
-        >
+        <div onClick={() => setIsAuthModalVisible(true)}>
           <p style={styles.text}>Authenticate</p>
         </div>
         <Modal
@@ -71,7 +67,15 @@ function Account() {
           style={{ fontSize: "16px", fontWeight: "500" }}
           width="340px"
         >
-          <div style={{ padding: "10px", display: "flex", justifyContent: "center", fontWeight: "700", fontSize: "20px" }}>
+          <div
+            style={{
+              padding: "10px",
+              display: "flex",
+              justifyContent: "center",
+              fontWeight: "700",
+              fontSize: "20px",
+            }}
+          >
             Connect Wallet
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
@@ -81,7 +85,10 @@ function Account() {
                 key={key}
                 onClick={async () => {
                   try {
-                    await authenticate({ provider: connectorId,signingMessage:"Welcome to The Collective Truth" });
+                    await authenticate({
+                      provider: connectorId,
+                      signingMessage: "Welcome to The Collective Truth",
+                    });
                     window.localStorage.setItem("connectorId", connectorId);
                     setIsAuthModalVisible(false);
                   } catch (e) {
@@ -118,7 +125,9 @@ function Account() {
         Hi
       </button> */}
       <div style={styles.account} onClick={() => setIsModalVisible(true)}>
-        <p style={{ marginRight: "5px", ...styles.text }}>{getEllipsisTxt(account, 6)}</p>
+        <p style={{ marginRight: "5px", ...styles.text }}>
+          {getEllipsisTxt(account, 6)}
+        </p>
         <Blockie currentWallet scale={3} />
       </div>
       <Modal
@@ -140,10 +149,19 @@ function Account() {
             borderRadius: "1rem",
           }}
           bodyStyle={{ padding: "15px" }}
-        >                
-          <Address avatar="left" size={6} copyable style={{ fontSize: "20px" }} />
+        >
+          <Address
+            avatar="left"
+            size={6}
+            copyable
+            style={{ fontSize: "20px" }}
+          />
           <div style={{ marginTop: "10px", padding: "0 10px" }}>
-            <a href={`${getExplorer(chainId)}/address/${account}`} target="_blank" rel="noreferrer">
+            <a
+              href={`${getExplorer(chainId)}/address/${account}`}
+              target="_blank"
+              rel="noreferrer"
+            >
               <SelectOutlined style={{ marginRight: "5px" }} />
               View on Explorer
             </a>
