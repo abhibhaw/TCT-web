@@ -161,7 +161,7 @@ export default function Profile(props) {
                     {
                         platform: <Image height="50px" width="50px" src="https://i0.wp.com/www.chalearning.ca/wp-content/uploads/2021/03/pnglot.com-twitter-bird-logo-png-139932.png?ssl=1" />,
                         action: twitterProfile === "" ? <Button onClick={showModal}>Twitter</Button> : <a href={"https://twitter.com/"+twitterProfile}>{twitterProfile}</a>,
-                        status: twitterProfile==="" ? "Not verified":<p>Verified <CheckCircleTwoTone twoToneColor="#52c41a" /> </p>,
+                        status: twitterProfile  ==="" ? "Not verified":<p>Verified <CheckCircleTwoTone twoToneColor="#52c41a" /> </p>,
                         weightage: '100%',
                     },
                     ]} pagination={false} />
